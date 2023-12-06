@@ -30,6 +30,9 @@ def get_data(api_url):
 def index():
     return render_template('index.html')
 
+@app.route('/modd')
+def modd():
+    return render_template('modd.html')
 
 @app.route('/search',methods=["GET"])
 def search():

@@ -157,8 +157,8 @@ form input[type="submit"] {
 }
 
 footer {
-    background-color: var(--secondary-color);
-    color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
     text-align: center;
     padding: 10px;
     margin-top: auto;
@@ -223,6 +223,10 @@ p {
     color: var(--primary-color)
 }
 
+.linkz {
+    text-decoration: none;
+    color: var(--secondary-color)
+}
 .pagination {
     width: 50vw;
     list-style: none;

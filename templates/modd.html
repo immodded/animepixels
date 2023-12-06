@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}MODD{% endblock title %}
+
+{% block content %}
+    <style>
+        .social-card {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+          }
+      
+          .social-link {
+            display: inline-block;
+            margin: 0 10px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 20px;
+            border: 2px solid #fff;
+            padding: 5px 5px;
+            border-radius:3px;
+          }
+      
+          .social-link i {
+            margin-right: 5px;
+          }
+    </style>
+    <div class="social-card">
+        <h1>MODD</h1>
+        <p>Connect with me:</p>
+        <a href="https://t.me/immodded" class="social-link" target="_blank"><i class="fa-brands fa-telegram"></i> Telegram @immodded</a>
+        <a href="https://darksied.pages.dev" class="social-link" target="_blank"><i class="fa-solid fa-skull"></i> Elsewhere</a>
+      </div>
+
+
+
+
+{% endblock content %}
