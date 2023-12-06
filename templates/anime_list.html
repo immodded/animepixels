@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Anime List{% endblock %}
+{% block metatitle %}Anime List{% endblock metatitle %}
+
+{% block leftcontent %}{% include 'search_form.html' %}{% endblock leftcontent %}
+    
+
+{% block content %}
+
+{% if anime_list %}
+{% for ani in anime_list %}
+<a class="linkx" href="/anime{{ ani['href'] }}">{{ ani["title"] }}</a>
+{% endfor %}
+{% else %}
+<h1 class="titlex">Nothing Found!</h1>
+{% endif %}
+
+{% if ani_list_data %}
+<ul class="listx">
+{% for data in ani_list_data %}
+<li class="itemx"><a href="/anime/info{{ data['href'] }}" class="linky">{{ data["title"] }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<h1 class="titlex">Nothing Found!</h1>
+{% endif %}
+
+
+
+
+{% endblock content %}

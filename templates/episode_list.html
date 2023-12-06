@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Episodes{% endblock %}
+{% block metatitle %}Episodes{% endblock metatitle %}
+{% block leftcontent %}{% include 'search_form.html' %}{% endblock leftcontent %}
+
+{% block content %}
+<h1 class="titlex">Episodes</h1>
+{% if episode_lists %}
+{% for ep in episode_lists|reverse %}
+<a class="linkx" href="{{ url_for('play', slug=ep['href'] , ep_start=ep_start, ep_end=ep_end, movie_id=movie_id, default_ep=default_ep, alias_anime=alias_anime) }}">{{ ep['name'] }} ({{ ep['cate'] }})</a>
+{% endfor %}
+{% else %}
+<h1 class="titlex">Nothing Found!</h1>
+{% endif %}
+
+
+{% endblock content %}

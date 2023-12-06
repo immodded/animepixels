@@ -1,0 +1,329 @@
+:root {
+    --primary-color: #222831;
+    --secondary-color: #00ADB5;
+    --tertiary-color:#EEEEEE;
+}
+
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--tertiary-color);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: var(--tertiary-color);
+    text-align: center;
+    padding: 0px 15px;
+}
+
+nav {
+    background-color: var(--secondary-color);
+    color: var(--tertiary-color);
+    padding: 10px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav a {
+    padding-right: 5px;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.right-content,
+.left-content {
+    flex: 0 0 20%;
+    height: 70vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--primary-color) var(--secondary-color); /* Firefox */
+
+    /* Webkit (Chrome, Safari) */
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--primary-color);
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: var(--secondary-color);
+    }
+
+
+
+}
+
+.center-content {
+    flex: 0 0 60%;
+}
+
+.right-content {
+    order: 3;
+}
+
+.center-content {
+    order: 2;
+}
+
+.left-content {
+    order: 1;
+}
+
+/* For smaller screens (mobile) */
+@media (max-width: 767px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .center-content {
+        flex: 0 0 100%;
+    }
+
+    .left-content,
+    .right-content {
+        height: 20vh;
+        max-height: 20vh; 
+    }
+
+    
+}
+
+.form-container {
+    width: 50vw;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--tertiary-color);
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        width: 85vw; 
+    }
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-bottom: 8px;
+}
+
+form input,
+form select,
+form textarea {
+    margin-bottom: 16px;
+    padding: 8px;
+    border: 1px solid var(--tertiary-color);
+    border-radius: 4px;
+}
+
+form input[type="submit"] {
+    background-color: var(--primary-color);
+    color: var(--tertiary-color);
+    cursor: pointer;
+}
+
+footer {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    text-align: center;
+    padding: 10px;
+    margin-top: auto;
+}
+
+
+@media only screen and (max-width:400px) {
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+
+    
+}
+
+.titlex {
+    color: var(--primary-color);
+    /* Use the primary color for the title */
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+p {
+    word-wrap: break-word;
+}
+
+.linkx {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 20px;
+    padding: 3px 3px;
+    border-radius: 5px;
+    border: 2px solid var(--secondary-color);
+}
+
+.linkx:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+
+/* Add CSS styles for the respective classes */
+.listx {
+    padding: 1rem 1rem;
+    list-style: none;
+}
+
+.itemx {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.linky {
+    text-decoration: none;
+    color: var(--primary-color)
+}
+
+.pagination {
+    width: 50vw;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    padding: 8px 12px;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.page-link:hover {
+    background-color: var(--primary-color);
+    color: var(--tertiary-color);
+}
+
+.page-link.active {
+    background-color: var(--primary-color);
+    color: var(--tertiary-color);
+}
+
+
+
+.form-button {
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: var(--tertiary-color);
+    cursor: pointer;
+    padding: 5px;
+
+
+}
+
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 10px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: calc(25% - 20px); 
+    float: left;
+    box-sizing: border-box;
+    height: 300px; 
+    display: flex;
+    flex-direction: column;
+}
+
+.card img {
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border-radius: 4px;
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.card-released {
+    font-size: 14px;
+    color: #666;
+}
+
+@media (max-width: 600px) {
+    .card {
+        width: calc(50% - 20px);
+    }
+}
+
+
+.info-card {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+    .info-card {
+        padding: 10px;
+    }
+}

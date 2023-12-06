@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ anime_info.anime_title }}{% endblock %}
+{% block metatitle %}{{ anime_info.anime_title }}{% endblock metatitle %}
+{% block metadescription %}{{ anime_info.plot_summary }}{% endblock metadescription %}
+{% block leftcontent %}{% include 'search_form.html' %}{% endblock leftcontent %}
+    
+
+{% block content %}
+
+
+
+<div class="info-card">
+    <img src="{{ anime_info.img_src }}" alt="{{ anime_info.anime_title }}">
+    <h1 class="titlex">{{ anime_info.anime_title }}</h1>
+    <p>{{ anime_info.plot_summary }}</p>
+    <p>{{ anime_info.type_info }}</p>
+    <p>{{ anime_info.released }}</p>
+    <p>{{ anime_info.status }}</p>
+    <p>Genres:
+        {% for genre in anime_info.genres %}
+            <a class="linkx" href="/route{{ genre.href }}">{{ genre.title }}</a>
+        {% endfor %}
+    </p>
+
+    <h3 class="titlex">Episodes:</h3>
+        {% for episode_range in anime_info.episodes %}
+                <a class="linkx" href="{{ url_for('episode_list', ep_start=episode_range.ep_start, ep_end=episode_range.ep_end, movie_id=anime_info.movie_id, default_ep=anime_info.default_ep, alias_anime=anime_info.alias_anime) }}">
+                    Episodes {{ episode_range.ep_start }} - {{ episode_range.ep_end }}
+                </a>
+        {% endfor %}
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}

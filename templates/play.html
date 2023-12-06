@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}play{% endblock %}
+{% block metatitle %}Play{% endblock metatitle %}
+
+{% block leftcontent %}{% include 'search_form.html' %}{% endblock leftcontent %}
+
+{% block content %}
+    <video style="width:100%;" controls crossorigin playsinline poster=""></video>
+        <a class="linkx" href="{{ play_data['download_links'][0] }}"><i class="fa-solid fa-download"></i> Download</a>
+    {% for link in play_data['stream_links'] %}
+            <button class="linkx" onclick="changeSource('{{ link }}')"><i class="fa-solid fa-server"></i> Change Server {{ loop.index }} </button>
+    {% endfor %}
+
+<!-- Plyr resources and browser polyfills are specified in the pen settings -->
+<!-- Hls.js 0.9.x and 0.10.x both have critical bugs affecting this demo. Using fixed git hash to when it was working (0.10.0 pre-release), until https://github.com/video-dev/hls.js/issues/1790 has been resolved -->
+<script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>
+<script>
+const video = document.querySelector('video');
+const defaultOptions = {};
+let player; 
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializePlayer('{{ play_data['stream_links'][0] }}');
+});
+
+function initializePlayer(source) {
+    if (!Hls.isSupported()) {
+        video.src = source;
+        player = new Plyr(video, defaultOptions);
+    } else {
+        const hls = new Hls();
+        hls.loadSource(source);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+            const availableQualities = hls.levels.map((l) => l.height)
+            availableQualities.unshift(0);
+
+            defaultOptions.quality = {
+                default: 0,
+                options: availableQualities,
+                forced: true,
+                onChange: (e) => updateQuality(e),
+            }
+
+            defaultOptions.i18n = {
+                qualityLabel: {
+                    0: 'Auto',
+                },
+            }
+
+            player = new Plyr(video, defaultOptions);
+        });
+
+        window.hls = hls;
+    }
+}
+
+function changeSource(newSource) {
+    if (window.hls) {
+        window.hls.destroy();
+    }
+    video.src = newSource;
+    const hls = new Hls();
+    hls.loadSource(newSource);
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+        const availableQualities = hls.levels.map((l) => l.height)
+        availableQualities.unshift(0);
+
+        defaultOptions.quality = {
+            default: 0,
+            options: availableQualities,
+            forced: true,
+            onChange: (e) => updateQuality(e),
+        }
+
+        defaultOptions.i18n = {
+            qualityLabel: {
+                0: 'Auto',
+            },
+        }
+
+        player = new Plyr(video, defaultOptions);
+    });
+
+    window.hls = hls;
+}
+
+function updateQuality(newQuality) {
+    if (newQuality === 0) {
+        window.hls.currentLevel = -1;
+    } else {
+        window.hls.levels.forEach((level, levelIndex) => {
+            if (level.height === newQuality) {
+                console.log("Found quality match with " + newQuality);
+                window.hls.currentLevel = levelIndex;
+            }
+        });
+    }
+}
+</script>
+
+{% if episode_lists %}
+<h2 class=titlex>Episodes</h2>
+{% for ep in episode_lists|reverse %}
+<a class="linkx" href="{{ url_for('play', slug=ep['href'] , ep_start=ep_start, ep_end=ep_end, movie_id=movie_id, default_ep=default_ep, alias_anime=alias_anime) }}">{{ ep['name'] }} ({{ ep['cate'] }})</a>
+{% endfor %}
+{% endif %}
+{% endblock content %}

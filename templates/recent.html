@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Recent{% endblock %}
+{% block metatitle %}Recent{% endblock metatitle %}
+
+{% block leftcontent %}{% include 'search_form.html' %}{% endblock leftcontent %}
+    
+
+{% block content %}
+{% if cards %}
+{% for card in cards %}
+        <div class="card">
+            <img src="{{ card['img_src'] }}" alt="{{ card['name'] }} Image">
+            <div class="card-title"><a href="/play{{ card['href'] }}" class="linky">{{ card['name'] }}</a></div>
+            <div class="card-released">{{ card['episode'] }}</div>
+        </div>
+        
+{% endfor %}
+{% else %}
+<h1 class="titlex">Nothing Found!</h1>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ def_route[:-5] }}{% endblock %}
+{% block metatitle %}{{ def_route[:-5] }}{% endblock metatitle %}
+
+{% block leftcontent %}{% include 'search_form.html' %}{% endblock leftcontent %}
+    
+
+{% block content %}
+{% if movie_aph_list %}
+{% for aph in movie_aph_list %}
+<a class="linkx" href="/route{{ aph['href'] }}">{{ aph["title"] }}</a>
+{% endfor %}
+{% else %}
+<h1 class="titlex">Nothing Found!</h1>
+{% endif %}
+{% if cards %}
+{% for card in cards %}
+
+        <div class="card">
+            <img src="{{ card['img_src'] }}" alt="{{ card['title'] }} Image">
+            <div class="card-title"><a href="/anime/info{{ card['href'] }}" class="linky">{{ card['title'] }}</a></div>
+            <div class="card-released">{{ card['released'] }}</div>
+        </div>
+        
+{% endfor %}
+{% else %}
+<h1 class="titlex">Nothing Found!</h1>
+{% endif %}
+{% endblock content %}
