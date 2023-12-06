@@ -40,7 +40,7 @@ def search():
     genre_data = get_data(genre_api_url)
     data = get_data(search_api_url)
     if data is not None:
-        return render_template('cards.html', cards=data, page=page,q=q, genre=genre_data)
+        return render_template('cards.html', cards=data, page=page,q=q, genre=genre_data, def_route = "search.html")
     else:
         return "Error fetching data from the API"
 
