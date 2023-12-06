@@ -11,8 +11,6 @@
 {% for aph in movie_aph_list %}
 <a class="linkx" href="/route{{ aph['href'] }}">{{ aph["title"] }}</a>
 {% endfor %}
-{% else %}
-<h1 class="titlex">Nothing Found!</h1>
 {% endif %}
 {% if cards %}
 {% for card in cards %}
