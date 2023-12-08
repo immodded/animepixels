@@ -29,6 +29,9 @@ def get_data(api_url):
 
 @app.route('/')
 def index():
+    # just for waking api server up!
+    requests.get(f"{api_base}/genre") 
+    # waked up!
     return render_template('index.html')
 
 @app.route('/modd')
