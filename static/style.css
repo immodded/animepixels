@@ -228,6 +228,7 @@ p {
     color: var(--secondary-color)
 }
 .pagination {
+    margin-top:2rem ;
     width: 50vw;
     list-style: none;
     display: flex;
@@ -280,7 +281,7 @@ p {
     width: calc(25% - 20px); 
     float: left;
     box-sizing: border-box;
-    height: 300px; 
+    height: 350px; 
     display: flex;
     flex-direction: column;
 }
