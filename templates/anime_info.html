@@ -4,12 +4,8 @@
 {% block metatitle %}{{ anime_info.anime_title }}{% endblock metatitle %}
 {% block metadescription %}{{ anime_info.plot_summary }}{% endblock metadescription %}
 {% block leftcontent %}{% include 'search_form.html' %}{% endblock leftcontent %}
-    
 
 {% block content %}
-
-
-
 <div class="info-card">
     <img src="{{ anime_info.img_src }}" alt="{{ anime_info.anime_title }}">
     <h1 class="titlex">{{ anime_info.anime_title }}</h1>
@@ -24,20 +20,45 @@
     </p>
 
     <h3 class="titlex">Episodes:</h3>
-        {% for episode_range in anime_info.episodes %}
-                <a class="linkx" href="{{ url_for('episode_list', ep_start=episode_range.ep_start, ep_end=episode_range.ep_end, movie_id=anime_info.movie_id, default_ep=anime_info.default_ep, alias_anime=anime_info.alias_anime) }}">
-                    Episodes {{ episode_range.ep_start }} - {{ episode_range.ep_end }}
-                </a>
-        {% endfor %}
+    {% for episode_range in anime_info.episodes %}
+        <button class="buttonx" onclick="fetchAndRenderEpisodes({{ episode_range.ep_start }},{{ episode_range.ep_end }}, {{ anime_info.movie_id }},{{ anime_info.default_ep }}, '{{ anime_info.alias_anime }}')">
+            Episodes {{ episode_range.ep_start }} - {{ episode_range.ep_end }}
+        </button>
+    {% endfor %}
+   
+
 </div>
-
-
-
-
-
-
-
-
-
+<div id="ep-loading" style="display: none;">Loading <div id="ep-loading-circle"></div>Episodes...</div>
+<div id="episode-buttons"></div>
+<script>
+    function fetchAndRenderEpisodes(ep_start, ep_end, movie_id, default_ep, alias_anime) {
+        const epLoading = document.getElementById('ep-loading');
+        const epLoadingCircle = document.getElementById('ep-loading-circle');
+        epLoading.style.display = 'block';
+        epLoadingCircle.style.display = 'inline-block';
+        axios.get(`/episode_list?ep_start=${ep_start}&ep_end=${ep_end}&movie_id=${movie_id}&default_ep=${default_ep}&alias_anime=${alias_anime}`)
+            .then(function (response) {
+                const episodeList = response.data;
+                const episodeButtonsDiv = document.getElementById('episode-buttons');
+                episodeButtonsDiv.innerHTML = '';
+                episodeList.reverse();
+                episodeList.forEach(function (ep) {
+                    const button = document.createElement('a');
+                    button.setAttribute('class', 'linkx');
+                    button.setAttribute('href', `/play/${ep.href}`);
+                    button.innerText = `${ep.name} (${ep.cate})`;
+                    episodeButtonsDiv.appendChild(button);
+                });
+                epLoading.style.display = 'none';
+            })
+            .catch(function (error) {
+                console.error('Error fetching episode list:', error);
+                epLoading.style.display = 'none';
+            })
+            .finally(function () {
+                epLoadingCircle.style.display = 'none';
+            });
+    }
+</script>
 
 {% endblock content %}

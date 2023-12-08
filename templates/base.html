@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,16 +13,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.plyr.io/3.7.3/plyr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.3/plyr.css" />
-    
-</head>
-<body>
-    <body>
-        <header>
-            <h1>Animepixels</h1>
 
-        </header>
-    
+</head>
+
+<body>
+    <header>
+        <h1>Animepixels</h1>
+
+    </header>
+
     <nav>
         <ul>
             <li><a href="/"><i class="fa-solid fa-house"></i> Home</a></li>
@@ -30,11 +32,11 @@
             <li><a href="/route/anime-movies.html"><i class="fa-solid fa-clapperboard"></i> Movies</a></li>
             <li><a href="/route/new-season.html"><i class="fa-solid fa-folder-plus"></i> New Season</a></li>
             <li><a href="/route/popular.html"><i class="fa-solid fa-fire"></i> Popular</a></li>
-            
+
         </ul>
-        
+
     </nav>
-    
+
     <div class="container">
         <div class="right-content">
             {% block rightcontent %}
@@ -50,47 +52,45 @@
         </div>
         <div class="center-content">
             {% block content %}{% endblock %}
-{% if page %}
-    <ul class="pagination">
-        {% if page > 1 %}
-            <li class="page-item">
-                <a class="page-link" href="{{ request.path }}?page={{ page - 1 }}{% if q %}&q={{ q }}{% endif %}{% if aph %}&aph={{ aph }}{% endif %}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-        {% endif %}
+            {% if page %}
+            <ul class="pagination">
+                {% if page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ request.path }}?page={{ page - 1 }}{% if q %}&q={{ q }}{% endif %}{% if aph %}&aph={{ aph }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
 
-        <li class="page-item ">
-            <a class="page-link active" href="{{ request.path }}?page={{ page }}{% if q %}&q={{ q }}{% endif %}{% if aph %}&aph={{ aph }}{% endif %}">
-                {{ page }}
-            </a>
-        </li>
+                <li class="page-item ">
+                    <a class="page-link active" href="{{ request.path }}?page={{ page }}{% if q %}&q={{ q }}{% endif %}{% if aph %}&aph={{ aph }}{% endif %}">
+                        {{ page }}
+                    </a>
+                </li>
 
-        <li class="page-item">
-            <a class="page-link" href="{{ request.path }}?page={{ page + 1 }}{% if q %}&q={{ q }}{% endif %}{% if aph %}&aph={{ aph }}{% endif %}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-    </ul>
-{% endif %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ request.path }}?page={{ page + 1 }}{% if q %}&q={{ q }}{% endif %}{% if aph %}&aph={{ aph }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
 
         </div>
         <div class="left-content">
-<a href="/modd" class="linkx"><i class="fa-solid fa-address-card"></i> Contact Us</a>
+            <a href="/modd" class="linkx"><i class="fa-solid fa-address-card"></i> Contact Us</a>
 
             {% block leftcontent %}
-            
+
             {% endblock %}
         </div>
     </div>
-    
-    
-    
-        <footer>
-            &#169; created by <a class="linkz" href="/modd">MODD</a>
-        </footer>
-    </body>
-    </html>
-    
+
+    <footer>
+        &#169; created by <a class="linkz" href="/modd">MODD</a>
+    </footer>
+
+
 </body>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </html>

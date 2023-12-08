@@ -6,31 +6,67 @@
 {% block leftcontent %}{% include 'search_form.html' %}{% endblock leftcontent %}
 
 {% block content %}
-    <video style="width:100%;" controls crossorigin playsinline poster=""></video>
-        <a class="linkx" href="{{ play_data['download_links'][0] }}"><i class="fa-solid fa-download"></i> Download</a>
-    {% for link in play_data['stream_links'] %}
-            <button class="linkx" onclick="changeSource('{{ link }}')"><i class="fa-solid fa-server"></i> Change Server {{ loop.index }} </button>
-    {% endfor %}
+
+<div class="info-card">
+<h2 class="titlex">{{ play_data['title'] }}</h2>
+<video style="width:100%;" controls crossorigin playsinline poster=""></video>
+<a class="linkx" href="{{ play_data['download_links'][0] }}"><i class="fa-solid fa-download"></i> Download</a>
+{% for link in play_data['stream_links'] %}
+<button class="linkx" onclick="changeSource('{{ link }}')"><i class="fa-solid fa-server"></i> Change Server {{ loop.index }} </button>
+{% endfor %}
 
 <!-- Plyr resources and browser polyfills are specified in the pen settings -->
 <!-- Hls.js 0.9.x and 0.10.x both have critical bugs affecting this demo. Using fixed git hash to when it was working (0.10.0 pre-release), until https://github.com/video-dev/hls.js/issues/1790 has been resolved -->
 <script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>
 <script>
-const video = document.querySelector('video');
-const defaultOptions = {};
-let player; 
+    const video = document.querySelector('video');
+    const defaultOptions = {};
+    let player;
 
-document.addEventListener('DOMContentLoaded', () => {
-    initializePlayer('{{ play_data['stream_links'][0] }}');
-});
+    document.addEventListener('DOMContentLoaded', () => {
+        initializePlayer('{{ play_data['stream_links'][0] }}');
+    });
 
-function initializePlayer(source) {
-    if (!Hls.isSupported()) {
-        video.src = source;
-        player = new Plyr(video, defaultOptions);
-    } else {
+    function initializePlayer(source) {
+        if (!Hls.isSupported()) {
+            video.src = source;
+            player = new Plyr(video, defaultOptions);
+        } else {
+            const hls = new Hls();
+            hls.loadSource(source);
+            hls.attachMedia(video);
+
+            hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                const availableQualities = hls.levels.map((l) => l.height)
+                availableQualities.unshift(0);
+
+                defaultOptions.quality = {
+                    default: 0,
+                    options: availableQualities,
+                    forced: true,
+                    onChange: (e) => updateQuality(e),
+                }
+
+                defaultOptions.i18n = {
+                    qualityLabel: {
+                        0: 'Auto',
+                    },
+                }
+
+                player = new Plyr(video, defaultOptions);
+            });
+
+            window.hls = hls;
+        }
+    }
+
+    function changeSource(newSource) {
+        if (window.hls) {
+            window.hls.destroy();
+        }
+        video.src = newSource;
         const hls = new Hls();
-        hls.loadSource(source);
+        hls.loadSource(newSource);
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
@@ -55,58 +91,61 @@ function initializePlayer(source) {
 
         window.hls = hls;
     }
-}
 
-function changeSource(newSource) {
-    if (window.hls) {
-        window.hls.destroy();
-    }
-    video.src = newSource;
-    const hls = new Hls();
-    hls.loadSource(newSource);
-    hls.attachMedia(video);
-
-    hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-        const availableQualities = hls.levels.map((l) => l.height)
-        availableQualities.unshift(0);
-
-        defaultOptions.quality = {
-            default: 0,
-            options: availableQualities,
-            forced: true,
-            onChange: (e) => updateQuality(e),
+    function updateQuality(newQuality) {
+        if (newQuality === 0) {
+            window.hls.currentLevel = -1;
+        } else {
+            window.hls.levels.forEach((level, levelIndex) => {
+                if (level.height === newQuality) {
+                    console.log("Found quality match with " + newQuality);
+                    window.hls.currentLevel = levelIndex;
+                }
+            });
         }
-
-        defaultOptions.i18n = {
-            qualityLabel: {
-                0: 'Auto',
-            },
-        }
-
-        player = new Plyr(video, defaultOptions);
-    });
-
-    window.hls = hls;
-}
-
-function updateQuality(newQuality) {
-    if (newQuality === 0) {
-        window.hls.currentLevel = -1;
-    } else {
-        window.hls.levels.forEach((level, levelIndex) => {
-            if (level.height === newQuality) {
-                console.log("Found quality match with " + newQuality);
-                window.hls.currentLevel = levelIndex;
-            }
-        });
     }
-}
 </script>
 
-{% if episode_lists %}
-<h2 class=titlex>Episodes</h2>
-{% for ep in episode_lists|reverse %}
-<a class="linkx" href="{{ url_for('play', slug=ep['href'] , ep_start=ep_start, ep_end=ep_end, movie_id=movie_id, default_ep=default_ep, alias_anime=alias_anime) }}">{{ ep['name'] }} ({{ ep['cate'] }})</a>
+<h3 class="titlex">Episodes:</h3>
+{% for episode_range in play_data['episodes'] %}
+<button class="linkx" onclick="fetchAndRenderEpisodes({{ episode_range.ep_start }},{{ episode_range.ep_end }}, {{ play_data.movie_id }},{{ play_data.default_ep }}, '{{ play_data.alias_anime }}')">
+    Episodes {{ episode_range.ep_start }} - {{ episode_range.ep_end }}
+</button>
 {% endfor %}
-{% endif %}
+
+<div id="ep-loading" style="display: none;">Loading <div id="ep-loading-circle"></div>Episodes...</div>
+<div id="episode-buttons"></div>
+<script>
+    function fetchAndRenderEpisodes(ep_start, ep_end, movie_id, default_ep, alias_anime) {
+        const epLoading = document.getElementById('ep-loading');
+        const epLoadingCircle = document.getElementById('ep-loading-circle');
+        epLoading.style.display = 'block';
+        epLoadingCircle.style.display = 'inline-block';
+        axios.get(`/episode_list?ep_start=${ep_start}&ep_end=${ep_end}&movie_id=${movie_id}&default_ep=${default_ep}&alias_anime=${alias_anime}`)
+            .then(function (response) {
+                const episodeList = response.data;
+                const episodeButtonsDiv = document.getElementById('episode-buttons');
+                episodeButtonsDiv.innerHTML = '';
+                episodeList.reverse();
+                episodeList.forEach(function (ep) {
+                    const button = document.createElement('a');
+                    button.setAttribute('class', 'linkx');
+                    button.setAttribute('href', `/play/${ep.href}`);
+                    button.innerText = `${ep.name} (${ep.cate})`;
+                    episodeButtonsDiv.appendChild(button);
+                });
+                epLoading.style.display = 'none';
+            })
+            .catch(function (error) {
+                console.error('Error fetching episode list:', error);
+                epLoading.style.display = 'none';
+            })
+            .finally(function () {
+                epLoadingCircle.style.display = 'none';
+            });
+    }
+</script>
+
+
+</div>
 {% endblock content %}

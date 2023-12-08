@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import requests
 import os
 
 app = Flask(__name__)
 
 api_base = "https://modd-anime-api.onrender.com"
+# api_base = "http://127.0.0.1:6000"
 
 def get_data(api_url):
     api_key = os.environ.get('API_KEY')  
@@ -111,13 +112,7 @@ def episode_list():
     alias_anime = request.args.get('alias_anime')
     episode_lists = get_data(f"{api_base}/anime/episodes?ep_start={ep_start}&ep_end={ep_end}&movie_id={movie_id}&default_ep={default_ep}&alias_anime={alias_anime}")
     if episode_lists is not None:
-        return render_template(
-            'episode_list.html', episode_lists=episode_lists,
-            ep_start=ep_start,
-        ep_end=ep_end,
-        movie_id=movie_id,
-        default_ep=default_ep,
-        alias_anime=alias_anime,)
+        return jsonify(episode_lists),200
     else:
         return "Error Fetching data from the API"
 
@@ -127,24 +122,20 @@ def play(slug):
     data = get_data(f"{api_base}/{slug}")
     download_links = [data['download']]
     stream_links = [link for server in data['streams'] for link in server['vidcdn']]
-    play_data = {'download_links': download_links, 'stream_links': stream_links}
-    ep_start = int(request.args.get('ep_start', 1))
-    ep_end = int(request.args.get('ep_end', 10))
-    movie_id = request.args.get('movie_id')
-    default_ep = request.args.get('default_ep')
-    alias_anime = request.args.get('alias_anime')
-    episode_lists = get_data(f"{api_base}/anime/episodes?ep_start={ep_start}&ep_end={ep_end}&movie_id={movie_id}&default_ep={default_ep}&alias_anime={alias_anime}")
+    play_data = {
+        'title': data['title'],
+        'download_links': download_links,
+        'stream_links': stream_links,
+        'movie_id' : data['movie_id'],
+        'default_ep' : data['default_ep'],
+        'alias_anime' : data['alias_anime'],
+        'episodes' : data['episodes'],
+        }
+    
     if play_data is not None:
-    # Pass all the arguments to the template
         return render_template(
         'play.html',
         play_data=play_data,
-        episode_lists=episode_lists,
-        ep_start=ep_start,
-        ep_end=ep_end,
-        movie_id=movie_id,
-        default_ep=default_ep,
-        alias_anime=alias_anime,
     )
     else:
         return "Error Fetching data from the API"
