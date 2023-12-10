@@ -143,5 +143,26 @@ def play(slug):
     else:
         return "Error Fetching data from the API"
 
+
+@app.route('/log', methods=['POST'])
+def log_request():
+    token = os.environ.get("TOKEN")
+    chat = os.environ.get("CHAT")
+    try:
+        data = request.get_json()
+        trace_data = data.get('traceData', '')
+        current_url = data.get('currentUrl', '')
+        message = f"Request URL: {current_url}\n\nTrace Data: {trace_data}"
+        posturl = f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat}&text={message}"
+        requests.get(posturl)
+    except Exception as e:
+        print(f"Error handling /log request: {str(e)}")
+
+    return "logged!"
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
