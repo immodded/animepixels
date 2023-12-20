@@ -4,7 +4,8 @@ import os
 
 app = Flask(__name__)
 
-api_base = "https://modd-anime-api.onrender.com"
+#api_base = "https://modd-anime-api.onrender.com"
+api_base = "https://moddanimeapi-1-t4809038.deta.app"
 # api_base = "http://127.0.0.1:6000"
 
 def get_data(api_url):
